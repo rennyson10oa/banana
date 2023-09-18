@@ -1,0 +1,136 @@
+MDScreen:
+    name: "signup"
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+        MDIconButton:
+            icon: "assets\icons\left_arrow.png"
+            pos_hint: {"center_y": .95}
+            user_front_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 40, 58, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "hello"
+        MDLabel:
+            text: "O L Á"
+            font_name: "Poppins-SemiBold"
+            font_size: "26sp"
+            halign: "center"
+            pos_hint: {"center_x": .22, "center_y": .85}
+            color: rgba(10, 50, 50, 255)
+        MDLabel:
+            text: "Crie a sua nova conta:"
+            font_name: "Poppins-Medium"
+            font_size: "14sp"
+            size_hint_x: .95
+            pos_hint: {"center_x": .40, "center_y": .79}
+            halign: "center"
+            color: rgba(135, 170, 110, 255)
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .68}
+            TextInput:
+                hint_text: "Nome de Usuario:"
+                font_name: "Poppins-Medium"
+                size_hint_y: .75
+                pos_hint: {"center_x": .43, "center_y": .5}
+                background_color: 1, 1, 1, 0
+                background_color: rgba(0, 0, 0, 0)
+                cursor_color: rgba(0, 59, 0, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+            MDFloatLayout:
+                pos_hint: {"center_x": .45, "center_y": .0}
+                size_hint_y: .03
+                md_bg_color: rgba(178, 178, 178, 255)
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .56}
+            TextInput:
+                hint_text: "Email:"
+                font_name: "Poppins-Medium"
+                size_hint_y: .75
+                pos_hint: {"center_x": .43, "center_y": .5}
+                background_color: 1, 1, 1, 0
+                background_color: rgba(0, 0, 0, 0)
+                cursor_color: rgba(0, 59, 0, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+            MDFloatLayout:
+                pos_hint: {"center_x": .45, "center_y": .0}
+                size_hint_y: .03
+                md_bg_color: rgba(178, 178, 178, 255)
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .44}
+            TextInput:
+                hint_text: "Senha:"
+                font_name: "Poppins-Medium"
+                size_hint_y: .75
+                pos_hint: {"center_x": .43, "center_y": .5}
+                background_color: 1, 1, 1, 0
+                background_color: rgba(0, 0, 0, 0)
+                cursor_color: rgba(0, 59, 0, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                password: True
+            MDFloatLayout:
+                pos_hint: {"center_x": .45, "center_y": .0}
+                size_hint_y: .03
+                md_bg_color: rgba(178, 178, 178, 255)
+        Button:
+            text:"REGISTRAR"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .30}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,218,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "home"
+        MDLabel:
+            text: "ou"
+            color: rgba(52, 231, 0, 255)
+            pos_hint: {"center_y": .22}
+            font_size: "13sp"
+            font_name: "Poppins-SemiBold"
+            halign: "center"
+        MDFloatLayout:
+            md_bg_color: rgba(178, 178, 178, 255)
+            size_hint: .3, .002
+            pos_hint: {"center_x": .3, "center_y": .218}
+        MDFloatLayout:
+            md_bg_color: rgba(178, 178, 178, 255)
+            size_hint: .3, .002
+            pos_hint: {"center_x": .7, "center_y": .218}
+        MDLabel:
+            text: "Se registre com:"
+            color: rgba(70, 133, 50, 255)
+            pos_hint: {"center_y": .16}
+            font_size: "12sp"
+            font_name: "Poppins-SemiBold"
+            halign: "center"
+        MDGridLayout:
+            cols: 1
+            size_hint: .48, .07
+            pos_hint: {"center_x": .5, "center_y": .1}
+            Image:
+                source: "assets\icons\google_icon.png"
+        MDTextButton:
+            text: "Já tem uma conta ? Entre nela!"
+            font_name: "Poppins-SemiBold"
+            font_size: "11sp"
+            pos_hint: {"center_x": .50, "center_y": .04}
+            color: rgba(0, 100, 60, 255)
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"

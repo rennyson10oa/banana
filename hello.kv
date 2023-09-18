@@ -1,0 +1,59 @@
+MDScreen:
+    name: "hello"
+    MDFloatLayout:
+        md_bg_color : 1, 9, 2, 1
+        Image:
+            source: "assets\logo2.png"
+            pos_hint: {"center_x": .25, "center_y": .90}
+            size_hint_x: 0.4
+        Image:
+            source: "assets\img_fundo_home.png"
+            pos_hint: {"center_x": .5, "center_y": .65}
+            size_hint_x: 0.7
+        MDLabel:
+            text: "O  C U I D A D O  N E C E S S A R I O"
+            font_name: "Poppins-SemiBold"
+            font_size: "16sp"
+            halign: "center"
+            pos_hint: {"center_x": .5, "center_y": .37}
+            color: rgba(34, 34, 34, 255)
+        MDLabel:
+            text: "enquanto você apenas relaxa!"
+            font_name: "Poppins-Medium"
+            font_size: "13sp"
+            size_hint_x: .95
+            pos_hint: {"center_x": .5, "center_y": .32}
+            halign: "center"
+            color: rgba(127, 127, 127, 255)
+        Button:
+            text:"LOGIN"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .18}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,218,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+        Button:
+            text:"REGISTRO"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .09}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "signup"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,218,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]

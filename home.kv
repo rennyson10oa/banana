@@ -1,0 +1,35 @@
+MDScreen:
+    name: "home"
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+        Button:
+            text:"Acabou, saia do app"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .34}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,218,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+            on_release:
+                root.stop()
+        Button:
+            text:"Ou volte para a primeira tela"
+            size_hint: .76, .065
+            pos_hint: {"center_x": .5, "center_y": .20}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,218,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "hello"
