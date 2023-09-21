@@ -71,7 +71,7 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .34}
             background_color: 0, 0, 0, 0
             font_name: "Poppins-SemiBold"
-            on_release: app.send_data(email.text, password.text)
+            on_release: app.login(email.text, password.text)
             canvas.before:
                 Color:
                     rgb: rgba(48,218,0,1)
@@ -122,7 +122,12 @@ MDScreen:
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "signup"
-        MDLabel:
-            id: error_label
-            text: ''  # Esta label será atualizada dinamicamente com a mensagem de erro
-            color: 1, 0, 0, 1  # Cor vermelha para a mensagem de erro
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDLabel:
+                id: error_label
+                text: ''
+                theme_text_color: "Secondary"
+                halign: "center"
+                size_hint_y: None
+                height: dp(36)
