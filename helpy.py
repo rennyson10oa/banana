@@ -48,6 +48,24 @@ class Happ(MDApp):
             self.error_label = self.ids.error_label
             self.error_label.text = f"Erro de autenticação: {e}"  # Exibir mensagem de erro
             Clock.schedule_once(self.clear_error, 5)
+
+    def registro(self, email, password):
+        from firebase import firebase
+
+        firebase = firebase.FirebaseApplication('https://helpyweather-b54ab-default-rtdb.firebaseio.com', None)
+        #pega o resutado do banco de dados
+        
+        result = firebase.get('https://helpyweather-b54ab-default-rtdb.firebaseio.com/Users', '')
+        
+        try:
+            for i in result.keys():
+                if result[i]['Email'] == email:
+                    if result[i]['Password'] == password:
+                        self.sm.current = 'home'
+        except Exception as e:
+            self.error_label = self.ids.error_label
+            self.error_label.text = f"Erro de autenticação: {e}"  # Exibir mensagem de erro
+            Clock.schedule_once(self.clear_error, 5)
     
     def clear_error(self, dt):
         error_label = self.ids.error_label
