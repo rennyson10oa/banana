@@ -30,6 +30,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .63}
             TextInput:
+                id: email
                 hint_text: "Email:"
                 font_name: "Poppins-Medium"
                 size_hint_y: .75
@@ -48,6 +49,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .5}
             TextInput:
+                id: password
                 hint_text: "Senha:"
                 font_name: "Poppins-Medium"
                 size_hint_y: .75
@@ -69,6 +71,7 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .34}
             background_color: 0, 0, 0, 0
             font_name: "Poppins-SemiBold"
+            on_release: app.send_data(email.text, password.text)
             canvas.before:
                 Color:
                     rgb: rgba(48,218,0,1)
@@ -76,9 +79,6 @@ MDScreen:
                     size: self.size
                     pos: self.pos
                     radius: [5]
-            on_release:
-                root.manager.transition.direction = "down"
-                root.manager.current = "home"
         MDTextButton:
             text: "Esqueceu a senha ?"
             pos_hint: {"center_x": .5, "center_y": .28}
@@ -122,3 +122,7 @@ MDScreen:
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "signup"
+        MDLabel:
+            id: error_label
+            text: ''  # Esta label será atualizada dinamicamente com a mensagem de erro
+            color: 1, 0, 0, 1  # Cor vermelha para a mensagem de erro
