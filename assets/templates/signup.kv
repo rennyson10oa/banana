@@ -10,7 +10,7 @@ MDScreen:
             text_color: rgba(26, 40, 58, 255)
             on_release:
                 root.manager.transition.direction = "right"
-                root.manager.current = "hello"
+                root.manager.current = "login"
         MDLabel:
             text: "O L Á"
             font_name: "Poppins-SemiBold"
@@ -26,10 +26,12 @@ MDScreen:
             pos_hint: {"center_x": .40, "center_y": .79}
             halign: "center"
             color: rgba(135, 170, 110, 255)
+
         MDFloatLayout:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .68}
             TextInput:
+                id: username
                 hint_text: "Nome de Usuario:"
                 font_name: "Poppins-Medium"
                 size_hint_y: .75
@@ -48,6 +50,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .56}
             TextInput:
+                id: email
                 hint_text: "Email:"
                 font_name: "Poppins-Medium"
                 size_hint_y: .75
@@ -66,6 +69,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .44}
             TextInput:
+                id: password
                 hint_text: "Senha:"
                 font_name: "Poppins-Medium"
                 size_hint_y: .75
@@ -87,6 +91,7 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .30}
             background_color: 0, 0, 0, 0
             font_name: "Poppins-SemiBold"
+            on_release: app.registro(username.text, email.text, password.text)
             canvas.before:
                 Color:
                     rgb: rgba(48,218,0,1)
@@ -94,9 +99,6 @@ MDScreen:
                     size: self.size
                     pos: self.pos
                     radius: [5]
-            on_release:
-                root.manager.transition.direction = "down"
-                root.manager.current = "home"
         MDLabel:
             text: "ou"
             color: rgba(52, 231, 0, 255)

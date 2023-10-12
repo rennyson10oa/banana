@@ -1,0 +1,51 @@
+MDScreen:
+    name: "signup_ok"
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+        Image:
+            source: "assets\images\plane.gif"
+            size: 500, 500
+            pos_hint: {"center_y": .68}
+            allow_stretch: True
+            anim_delay: 0.017
+        MDIconButton:
+            icon: "assets\icons\left_arrow.png"
+            pos_hint: {"center_y": .95}
+            user_front_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 40, 58, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "signup"
+        MDLabel:
+            text: "Conta Criada com sucesso!!!"
+            font_name: "Poppins-SemiBold"
+            font_size: "18sp"
+            size_hint_x: .95
+            pos_hint: {"center_x": .50, "center_y": .46}
+            halign: "center"
+            color: rgba(135, 170, 110, 255)
+        MDLabel:
+            text: "agora faça seu login"
+            font_name: "Poppins-Medium"
+            font_size: "16sp"
+            size_hint_x: .95
+            pos_hint: {"center_x": .50, "center_y": .39}
+            halign: "center"
+            color: rgba(135, 170, 110, 255)
+        Button:
+            text:"FAZER LOGIN"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .20}
+            background_color: 0, 0, 0, 0
+            font_name: "Poppins-SemiBold"
+            on_release: 
+                root.manager.transition.direction = "right"
+                root.manager.current = "login"
+            canvas.before:
+                Color:
+                    rgb: rgba(48,200,0,1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
