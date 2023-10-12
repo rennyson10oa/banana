@@ -1,7 +1,7 @@
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen, ScreenManager, noTransition
+from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
 from kivyauth.google_auth import initialize_google, login_google, logout_google
