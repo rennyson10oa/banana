@@ -3,6 +3,8 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
+from kivymd.uix.behaviors import FakeRectangularElevationBehavior
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivyauth.google_auth import initialize_google, login_google, logout_google
 from kivy.clock import Clock 
@@ -18,8 +20,7 @@ class LoginWindow(Screen):
 
 class Signup_ok(Screen):
     pass
-class RegisterSuce(Screen):
-    pass
+
 class Happ(MDApp):
     def build(self):
         client_id = open("client_id.txt")
@@ -27,11 +28,11 @@ class Happ(MDApp):
         initialize_google(self.after_login, self.error_listener, client_id.read(), client_secret.read())
         self.root = BoxLayout(orientation='vertical')
         self.sm = ScreenManager()
-        self.sm.add_widget(Builder.load_file("assets/templates/home.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/hello.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/signup.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/signup_ok.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/login.kv"))
+        self.sm.add_widget(Builder.load_file("assets/templates/home.kv"))
         return self.sm
     
     def after_login(self):
