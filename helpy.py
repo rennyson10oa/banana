@@ -22,19 +22,27 @@ class Signup_ok(Screen):
     pass
 
 class Happ(MDApp):
+
     def build(self):
         client_id = open("client_id.txt")
         client_secret = open("cliente_secret.txt")
         initialize_google(self.after_login, self.error_listener, client_id.read(), client_secret.read())
         self.root = BoxLayout(orientation='vertical')
         self.sm = ScreenManager()
+        self.sm.add_widget(Builder.load_file("assets/templates/home.kv"))
+        self.sm.add_widget(Builder.load_file("assets/templates/splashscreen.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/hello.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/signup.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/signup_ok.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/login.kv"))
-        self.sm.add_widget(Builder.load_file("assets/templates/home.kv"))
         return self.sm
+    '''
+    def on_start(self):
+        Clock.schedule_once(self.change_screen, 10)
     
+    def change_screen(self, dt):
+        self.sm.current = "hello"
+    '''
     def after_login(self):
         pass
     
