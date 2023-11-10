@@ -1,3 +1,5 @@
+import time
+import pymongo
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -10,6 +12,7 @@ from kivyauth.google_auth import initialize_google, login_google, logout_google
 from kivy.clock import Clock 
 
 Window.size = (310, 580)
+uri = "mongodb+srv://rennyson:rennyson100a@helpy.sllrgwg.mongodb.net/?retryWrites=true&w=majority"
 
 class HomeWindow(Screen):
     pass
@@ -36,13 +39,18 @@ class Happ(MDApp):
         self.sm.add_widget(Builder.load_file("assets/templates/signup_ok.kv"))
         self.sm.add_widget(Builder.load_file("assets/templates/login.kv"))
         return self.sm
-    '''
+    
     def on_start(self):
-        Clock.schedule_once(self.change_screen, 10)
+        #Clock.schedule_once(self.change_screen, 10)
+        pass
     
     def change_screen(self, dt):
         self.sm.current = "hello"
-    '''
+    
+    def update_general(self, dt):
+        cliente = pymongo.MongoClient(uri)
+        db = cliente.get_database("seu_banco_de_dados")
+    
     def after_login(self):
         pass
     
