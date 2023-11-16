@@ -82,8 +82,8 @@ const char MAIN_page[] PROGMEM = R"=====(
 </html>
 )=====";
 
-const char* ssid = "Helpy Weather Config" //nome da rede ap
-const char* password = "12345678" //senha da rede ap
+const char* ssid = "Helpy Weather Config"; //nome da rede ap
+const char* password = "12345678"; //senha da rede ap
 
 ESP8266WebServer server(80); //server usa a porta padrao 80
 
@@ -92,5 +92,214 @@ void setup(){
   Serial.begin(115200);
 
   WiFi.softAP(ssid, password);
-  serial.print()
+  Serial.print("Ponto de Acesso /");
+  Serial.print(ssid);
+  Serial.print("\" iniciado");
+
+  Serial.print("Endereco de IP:\t");
+  Serial.println(WiFi.softAPIP());
+
+  //tratamentos das rotas do server
+
+  server.on("/", handleRoot);
+  server.on("/action_new_connection", handleForm);
+  server.on("/action_previous_connection", connectEeprom);
+
+  server.begin();
+  Serial.println("Servidor HTTP iniciado");
+}
+
+void loop(){
+    server.handleClient();
+    if(WiFi.status() != WL_CONNECTED) {
+    digitalWrite(ONBOARD_LED, HIGH); //Desativa o LED
+    Serial.println("CONECTADO");
+  }
+}
+
+void handleRoot(){
+    String index = listSSID(); //le o html
+    server.send(200, "text/html", index);
+}
+
+void handleForm(){
+    String ssidWifi = server.arg("ssid"); //pega esses dados da pagina html
+    String passwordWifi = server.arg("password");
+
+    Serial.printf("SSID: %s\n", ssidWifi);
+    Serial.printf("Password: %s\n", passwordWifi);
+
+    if(!ssidWifi.equals("") && !passwordWifi.equals("")){
+        connectToWifi(ssidWifi, passwordWifi);
+    }
+}
+
+void connectToWifi(String ssidWifi, String passwordWifi){
+    int count = 0;
+    WiFi.begin(ssidWifi.c_str(), passwordWifi.c_str()); //conecta ao roteador
+    Serial.print("");
+
+    //espera por alguma conexao
+    while (count < 15){
+        delay(500);
+        Serial.print(".");
+        if(WiFi.status() == WL_CONNECTED) {
+            Serial.println("");
+            salvarEeprom(ssidWifi, passwordWifi);
+            Serial.println("");
+            //se a conexao acontecer com sucesso ele mostra o ip no monitor serial
+            Serial.println("Conectado ao WiFi");
+            Serial.print("Endereco IP: ")
+            Serial.println(WiFi.localIP()); //endereco ip do esp
+            digitalWrite(ONBOARD_LED, LOW); //acende o mano led
+            String responsePage = (const __FlashStringHelper*) MAIN_page;
+            responsePage.replace("<br><br>", "<p id='status'>Conectado!</p>");
+            server.send(200, "text/html", responsePage);
+            return;
+        }
+        else if(WiFi.status() == WL_CONNECT_FAILED){
+            String responsePage = (const __FlashStringHelper*) MAIN_page;
+            responsePage.replace("<br><br>", "<p id='status', style='color=red;'>Falha ao Conectar</p>");
+            server.send(200, "text/html", responsePage);
+        }
+        count++;
+    }
+    Serial.println();
+    Serial.println("Timed out.");
+    String responsePage = (const __FlashStringHelper*) MAIN_page; 
+    responsePage.replace("<br><br>", "<p id='status' style='color:red;'>Erro.</p>");
+    server.send(200, "text/html", responsePage);
+    return;
+}
+
+String listSSID(){
+    String index = (const __FlashStringHelper*) MAIN_page; // le o conteudo html
+    String networks = "";
+    int n = WiFi.scanNetworks();
+    Serial.println("Acabou o escaneamento");
+    if(n == 0){
+        Serial.printf("Nenhuma rede encontrada")
+        index.replace("<select class='text-field' name='ssid'><option value'' disable select>Nenhuma Rede Encontrada</option></select>");
+        index.replace("<br><br>", "<p id='status' style='color=red;'>Rede nao encontrada.</p>");
+        return index;
+    }
+    else{
+        Serial.printf("%d Redes Encontradas. \n", n);
+        networks += "<select class='text-field' name=ssid><option value='' disable selected>SSID</option></select>";
+        for (int i = 0; i < n; ++i){
+            //mostra o ssid de cada rede encontrada
+            networks += "option value='" + WiFi.SSID(i) + "'>" +WiFi.SSID(i) + "</option>";
+        }
+        networks += "</select>";
+    }
+    index.replace("<select class='text-field' name='ssid'></select>", networks);
+    return index;
+}
+
+void salvarEeprom(String ssidWifi, String passwordWifi) {
+  EEPROM.begin(98); // Tamanho da FLASH reservado para EEPROM. Pode ser de 4 a 4096 bytes
+ 
+  if(!compareEeprom(ssidWifi, passwordWifi)) {
+    Serial.println("Salvando:");
+    EEPROM.write(0, ssidWifi.length());
+    Serial.println(ssidWifi.length());
+    
+    for(int i = 2; i < 2+ssidWifi.length(); i++) {
+      Serial.print(ssidWifi.charAt(i-2));
+      EEPROM.write(i, ssidWifi.charAt(i-2));
+    }
+    Serial.println("");
+    
+    Serial.println("Salvando:");
+    EEPROM.write(1, passwordWifi.length());
+    Serial.println(passwordWifi.length());
+    
+    for(int j = 2+ssidWifi.length(); j < 2+ssidWifi.length()+passwordWifi.length(); j++) {
+      Serial.print(passwordWifi.charAt(j-2-ssidWifi.length()));
+      EEPROM.write(j, passwordWifi.charAt(j-2-ssidWifi.length()));
+    }
+    Serial.println("");
+    
+    EEPROM.commit(); // Salva alterações na FLASH
+  }
+  EEPROM.end(); // Apaga a cópia da EEPROM salva na RAM
+}
+
+boolean compareEeprom(String ssidWifi, String passwordWifi) {
+    int idLength = int(EEPROM.read(0)); //tamanho do ssid armazenado
+    int passLength = int(EEPROM.read(1)); //tamanho da senha armazenada
+    String id = "";
+    String pass = "";
+
+    Serial.println("Lendo SSID: ");
+    Serial.print("Tamanho: ");
+    Serial.println(idLength);
+    for(int i = 2; i < 2+idLength; i++) {
+        Serial.print("Posição ");
+        Serial.print(i);
+        Serial.print(": ");
+        id = id + char(EEPROM.read(i));
+        Serial.println(id[i-2]);
+    }
+    Serial.println("");
+
+    Serial.println("Lendo senha:");
+    Serial.print("Tamanho:");
+    Serial.println(passLength);
+    for(int j = 2+idLength; j < 2+idLength+passLength; j++) {
+        Serial.print("Posição ");
+        Serial.print(j);
+        Serial.print(": ");
+        pass = pass + char(EEPROM.read(j));
+        Serial.println(pass[j-2-idLength]);
+        Serial.println(pass);
+    }
+    Serial.println("");
+
+    Serial.print("SSID é igual: ");
+    Serial.println(id.equals(ssidWifi));
+    
+    Serial.print("Senha é igual: ");
+    Serial.println(pass.equals(passwordWifi));
+    
+    if(id.equals(ssidWifi) && pass.equals(passwordWifi))
+    {
+        Serial.println("Dados já presentes na memória.");
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void connectEeprom() {
+    EEPROM.begin(98); //denovo, e o tamanho da memoria usada no flash(aquele "e" tem acento, e pq meu teclado e ingles... mds que falta faz um teclado pt-br)
+
+    int ssidSize = (int)EEPROM.read(0); // Tamanho do SSID armazenado (número de bytes)
+    int passwordSize = (int)EEPROM.read(1); // Tamanho do Password armazenado (número de bytes)
+    String ssidWifi = "";
+    String passwordWifi = "";
+    
+    Serial.println("Lendo:");
+    for(int i = 2; i < 2+ssidSize; i++) {
+        Serial.print(char(EEPROM.read(i)));
+        ssidWifi.concat(char(EEPROM.read(i)));
+    }
+    Serial.println("");
+    
+    Serial.println("Lendo:");
+    for(int j = 2+ssidSize; j < 2+ssidSize+passwordSize; j++) {
+        Serial.print(char(EEPROM.read(j)));
+        passwordWifi.concat(char(EEPROM.read(j)));
+    }
+    Serial.println("");
+    
+    EEPROM.end(); // Apaga a cópia da EEPROM salva na RAM
+    
+    Serial.println("Leu:");
+    Serial.println(ssidWifi);
+    Serial.println(passwordWifi);
+    
+    connectToWiFi(ssidWifi, passwordWifi);
 }
