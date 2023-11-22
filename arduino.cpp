@@ -3,11 +3,18 @@
 #include <EEPROM.h>
 #include <ESP8266HTTPClient.h>
 #include <DHT.h>
+#include <FirebaseArduino.h>
 
 #define ONBOARD_LED D4 //pino do led de aviso wifi
 #define DHTPIN 4 //Pino digital D2 (GPIO4) conectado ao DHT11
 
+#define FIREBASE_HOST "helpyweather-b54ab-default-rtdb.firebaseio.com"
+#define FIREBASE_AUTH "LwDhQynOI2BrXFBzxkSW8GSkUF9zAEqVL1nCK6Ck"
+
 const int pinHigrometro = A0; //pino do higrometro
+
+const char* ssid = "Helpy Weather Config"; //nome da rede ap
+const char* password = "12345678"; //senha da rede ap
 
 //pagina html do web server
 const char MAIN_page[] PROGMEM = R"=====( 
@@ -85,9 +92,6 @@ const char MAIN_page[] PROGMEM = R"=====(
 </html>
 )=====";
 
-const char* ssid = "Helpy Weather Config"; //nome da rede ap
-const char* password = "12345678"; //senha da rede ap
-
 String listSSID() {
   String index = (const __FlashStringHelper*) MAIN_page; //Lê a página HTML
   String networks = ""; //variavel de armazenamento da rede
@@ -150,6 +154,10 @@ void setup(){
 
     server.begin();
     Serial.println("Servidor HTTP iniciado");
+
+    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH); //inicia o firebase
+    Serial.println("Firebase iniciado");
+
 }
 
 void handleRoot() {
@@ -202,8 +210,6 @@ void connectToWifi(String ssidWifi, String passwordWifi) {
     String responsePage = (const __FlashStringHelper*) MAIN_page; //Lê conteúdo do HTML
     responsePage.replace("<br><br>", "<p id='status' style='color:red;'>Erro.</p>");
     server.send(200, "text/html", responsePage); 
-
-    WiFi.softAPdisconnect(true);
 
     return;
 }
@@ -378,8 +384,17 @@ void loop() {
     higroTimer();
     dhtTimer();
 
+    //Teste de um led
+    String ledtest = Firebase.getString("led");
+
+    if(ledtest == "ligar"){
+        digitalWrite(ONBOARD_LED, HIGH);
+    } else {
+        digitalWrite(ONBOARD_LED, LOW);
+    }
+
     if(WiFi.status() == WL_CONNECTED) {
-        digitalWrite(ONBOARD_LED, LOW); // Desativa o LED
+        // digitalWrite(ONBOARD_LED, LOW); // Desativa o LED
         Serial.println("Conectado à rede Wi-Fi");
 
         HTTPClient http;
@@ -409,10 +424,11 @@ void loop() {
         }
 
         http.end();
+        WiFi.softAPdisconnect(true);
 
         delay(5000); // Espera por 5 segundos antes de fazer o próximo ping
     } else {
-        digitalWrite(ONBOARD_LED, HIGH); // Ativa o LED
+        // digitalWrite(ONBOARD_LED, HIGH); // Ativa o LED
         Serial.println("Não conectado à rede Wi-Fi");
         delay(5000); // Espera por 5 segundos antes de tentar novamente
     }
