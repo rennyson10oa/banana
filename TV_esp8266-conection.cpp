@@ -3,14 +3,15 @@
 #include <DHT.h>
 
 // Substitua essas informações com as suas credenciais Firebase
-#define FIREBASE_HOST "seu-projeto.firebaseio.com"
-#define FIREBASE_AUTH "sua-chave-de-autenticacao"
+#define FIREBASE_HOST "helpyweather-b54ab-default-rtdb.firebaseio.com"
+#define FIREBASE_AUTH "LwDhQynOI2BrXFBzxkSW8GSkUF9zAEqVL1nCK6Ck"
 
 // Substitua essas informações com as suas credenciais de Wi-Fi
-#define WIFI_SSID "seu-SSID"
-#define WIFI_PASSWORD "sua-senha"
+#define WIFI_SSID "wifi"
+#define WIFI_PASSWORD "senha"
 
-#define DHT_PIN 2 // Pino de dados do sensor DHT
+#define DHT_PIN 4 // Pino de dados do sensor DHT
+const int pinHigrometro = A0; 
 
 DHT dht(DHT_PIN, DHT11);
 
@@ -38,7 +39,14 @@ void loop() {
   float umidade = dht.readHumidity();
 
   // Simula um valor para o sensor de solo (substitua com a lógica do seu sensor)
-  int umidadeSolo = analogRead(A0);
+  int umidadeSolo = analogRead(pinHigrometro);
+
+  Serial.print("Temperatura: ");
+  Serial.print(temperatura);
+  Serial.print(" °C, Umidade: ");
+  Serial.print(umidade);
+  Serial.print("%, Umidade do Solo: ");
+  Serial.println(umidadeSolo);
 
   // Cria um objeto JSON para enviar ao Firebase
   String jsonData = "{\"temperatura\": " + String(temperatura) +
