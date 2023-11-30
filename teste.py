@@ -1,21 +1,6 @@
-import pymongo
+from firebase import firebase
 
-uri = "mongodb+srv://rennyson:rennyson100a@helpy.sllrgwg.mongodb.net/?retryWrites=true&w=majority"
-
-try:
-    cliente = pymongo.MongoClient(uri)
-
-    # Exemplo de seleção de um banco de dados
-    db = cliente.get_database("seu_banco_de_dados")
-
-    # Exemplo de seleção de uma coleção
-    colecao = db.get_collection("sua_colecao")
-
-    # Fazer as operações desejadas no banco de dados e coleção aqui.
-
-    cliente.close()
-    
-    print("Conexão bem-sucedida com o MongoDB remoto!")
-
-except pymongo.errors.ConnectionFailure as e:
-    print(f"Erro ao conectar ao MongoDB: {e}")
+firebase = firebase.FirebaseApplication('https://helpyweather-b54ab-default-rtdb.firebaseio.com', None)
+            
+result = firebase.get('/sensores/temperatura', '')
+print(result)

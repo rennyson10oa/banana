@@ -1,34 +1,42 @@
 #:kivy 2.2.1
 
 MDScreen:
+    name: 'home'
     MDBottomNavigation:
         text_color_active: 0, 1, 0, 1
         MDBottomNavigationItem:
             name: 'plantScreen'
             text: 'Plants'
             icon: 'flower-tulip-outline'
-
             MDLabel:
                 text: 'My plants'
                 halign: 'center'
                 font_size: "26sp"
                 font_name: "Poppins-SemiBold"
                 pos_hint: {"center_x": .28, "center_y": .93}
-
+            MDLabel:
+                id: temp
+                text: 'temperatura'
+                pos_hint: {"center_x": .60, "center_y": .70}
+            MDLabel:
+                id: umidsolo
+                text: 'Umidade do solo'
+                pos_hint: {"center_x": .60, "center_y": .60}
+            MDLabel:
+                id: umidar
+                text: 'Umidade do Ar'
+                pos_hint: {"center_x": .60, "center_y": .50}
         MDBottomNavigationItem:
             name: 'staticScreen'
             text: 'Analise'
             icon: 'chart-line'
-
             MDLabel:
                 text: 'Tela de estatistica'
                 halign: 'center'
-
         MDBottomNavigationItem:
             name: 'configScreen'
             text: 'config'
             icon: 'cog-outline'
-
             MDLabel:
                 text: 'Config Screen'
                 halign: 'center'
